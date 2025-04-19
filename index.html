@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To-Do List</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #6a5acd, #4f81bd);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Navbar */
+    header nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      margin-bottom: 25px;
+    }
+
+    nav .logo h1 {
+      color: white;
+      font-size: 24px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 15px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+
+    /* Todo Section */
+    .todo {
+      background-color: white;
+      border-radius: 12px;
+      padding: 25px;
+    }
+
+    .todo h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .todo input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .todo button {
+      width: 100%;
+      padding: 12px;
+      background-color: #6a5acd;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      
+    }
+
+    .todo button:hover {
+      background-color: #5a4abb;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #6a5acd;
+      color: white;
+    }
+
+    td {
+      background-color: #f9f9f9;
+    }
+
+    td button {
+      background-color: #4f81bd;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    td button:hover {
+      background-color: #3e6d99;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 30px;
+      padding: 15px;
+      text-align: center;
+      color: white;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav ul {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .todo {
+        padding: 15px;
+      }
+
+      th, td {
+        font-size: 14px;
+        padding: 8px;
+      }
+
+      .todo input[type="text"],
+      .todo button {
+        font-size: 14px;
+        padding: 10px;
+      }
+      
+    }
+
+    .max{
+        display: flex;
+        justify-content: space-evenly;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Navbar -->
+    <header>
+      <nav>
+        <div class="logo">
+          <h1>To-Do App</h1>
+        </div>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Tasks</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Todo Section -->
+    <section class="todo">
+      <h2>My To-Do List</h2>
+       <h4>Enter new task</h4>
+      <input type="text" id="task" placeholder="Enter new task" />
+      <h4>Enter new msg</h4>
+
+      <input type="text" id="msg" placeholder="Enter new msg" />
+      <div class="max">
+
+          <button id="submit" >Add Task</button>
+          <div style="width: 60px;"> </div>
+          <button  >Clear Task</button>
+        </div>
+
+      <table>
+        <thead>
+          <tr>
+              <th>Slno</th>
+            <th>Task</th>
+            <th>Action</th>
+            <th>del</th>
+          </tr>
+        </thead>
+        <tbody id="tbd">
+      
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2025 To-Do App. Built with 💙 and ☁️</p>
+    </footer>
+  </div>
+  <script>
+    // Load and display tasks from localStorage when the page loads
+    function updateload() {
+      // Get tasks array from localStorage, or use empty array if none
+      let arr = JSON.parse(localStorage.getItem('max')) || [];
+  
+      // Prepare a string to hold the HTML rows
+      let str = '';
+  
+      // Loop through each task and build a table row
+      arr.forEach((element, index) => {
+        str += `
+          <tr>
+            <td>${index + 1}</td>                     <!-- Serial number -->
+            <td>${element[0]}</td>                    <!-- Task text -->
+            <td>${element[1]}</td>                    <!-- Message text -->
+            <td><button onclick="del(${index})">Delete</button></td> <!-- Delete button -->
+          </tr>
+        `;
+      });
+  
+      // Insert the generated rows into the table body
+      document.getElementById('tbd').innerHTML = str;
+    }
+  
+    // Add a new task and save it to localStorage
+    function update() {
+      // Get values from input fields and trim spaces
+      let task = document.getElementById('task').value.trim();
+      let msg = document.getElementById('msg').value.trim();
+  
+      // Show alert if fields are empty
+      if (!task || !msg) return alert('Please fill in both fields');
+  
+      // Get existing task array or initialize as empty
+      let arr = JSON.parse(localStorage.getItem('max')) || [];
+  
+      // Add new task as an array [task, msg]
+      arr.push([task, msg]);
+  
+      // Save updated array to localStorage
+      localStorage.setItem('max', JSON.stringify(arr));
+  
+      // Reload the task list to reflect the new task
+      updateload();
+  
+      // Clear input fields after adding
+      document.getElementById('task').value = '';
+      document.getElementById('msg').value = '';
+    }
+  
+    // Delete a task at a given index
+    function del(index) {
+      // Get the task array from localStorage
+      let arr = JSON.parse(localStorage.getItem('max')) || [];
+  
+      // Remove one item from the array at the given index
+      arr.splice(index, 1);
+  
+      // Save the updated array back to localStorage
+      localStorage.setItem('max', JSON.stringify(arr));
+  
+      // Refresh the task list
+      updateload();
+    }
+  
+    // When "Add Task" button is clicked, run update function
+    document.getElementById('submit').addEventListener('click', update);
+  
+    // When page loads, show the current tasks
+    window.onload = updateload;
+  
+    // Optional: Clear all tasks (for your Clear Task button)
+    function clearTasks() {
+      if (confirm('Are you sure you want to clear all tasks?')) {
+        // Remove the 'max' key from localStorage
+        localStorage.removeItem('max');
+  
+        // Reload the empty task list
+        updateload();
+      }
+    }
+  </script>
+  
+</body>
+</html>
